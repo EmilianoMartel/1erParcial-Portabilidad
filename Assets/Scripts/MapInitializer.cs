@@ -1,22 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
 
-public class MapBuilder : MonoBehaviour
+public class MapInitializer : MonoBehaviour
 {
-    [SerializeField] private MapDataSO _data;
-    [SerializeField] private List<Character> _characters = new();
+    [SerializeField] private LevelData _data;
 
     private List<List<bool>> _mapList = new();
     private Vector2 _characterPosition = Vector2.zero;
 
+    public Action<Character> createdCharacter = delegate { };
+
     private void Awake()
     {
-        StartMap();
+        StartCoroutine(StartMap());
     }
 
-    private void StartMap()
+    private IEnumerator StartMap()
+    {
+        yield return StartCoroutine(PlaceCells());
+        yield return StartCoroutine(PlaceCharacters(_data.players));
+        yield return StartCoroutine(PlaceCharacters(_data.enemies));
+    }
+
+    private IEnumerator PlaceCells()
     {
         var reference = Resources.Load<GameObject>("Prefabs/" + _data.cellGameObjectName);
         for (int i = 0; i < _data.column; i++)
@@ -25,22 +35,23 @@ public class MapBuilder : MonoBehaviour
             for (int j = 0; j < _data.row; j++)
             {
                 var gridCell = Instantiate(reference, transform);
-                
+
                 gridCell.transform.localPosition = new Vector3(i, j, 1);
                 row.Add(false);
             }
             _mapList.Add(row);
         }
-        StartCoroutine(PlaceCharacters());
+        yield return null;
     }
 
-    private IEnumerator PlaceCharacters()
+    private IEnumerator PlaceCharacters(List<Character> list)
     {
-        for (int i = 0; i < _characters.Count; i++)
+        for (int i = 0; i < list.Count; i++)
         {
             yield return StartCoroutine(RandomPosition());
-            var character =Instantiate(_characters[i], transform);
-            character.transform.localPosition = new Vector3(_characterPosition.x, _characterPosition.y, 1);
+            var player =Instantiate(list[i], transform);
+            player.transform.localPosition = new Vector3(_characterPosition.x, _characterPosition.y, 1);
+            createdCharacter?.Invoke(player);
         }
     }
 
@@ -70,17 +81,5 @@ public class MapBuilder : MonoBehaviour
             return true;
 
         return false;
-    }
-
-    [ContextMenu("Debug")]
-    private void DebugList()
-    {
-        for (int i = 0; i < _mapList.Count; i++)
-        {
-            for (int j = 0; j < _mapList[i].Count; j++)
-            {
-                Debug.Log("i: " + i+ " j: " + j +" state " +_mapList[i][j]);
-            }
-        }
     }
 }

@@ -6,6 +6,10 @@ using UnityEngine;
 public class Character : MonoBehaviour, IHealthPoints
 {
     [SerializeField] protected int _life = 10;
+    [SerializeField] private int _movement = 1; 
+
+    public bool isActive = false;
+    public bool isPlayed = false;
 
     protected Vector2 p_actualPosition = Vector2.zero;
     
