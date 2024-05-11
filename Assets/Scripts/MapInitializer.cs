@@ -13,6 +13,7 @@ public class MapInitializer : MonoBehaviour
     private Vector2 _characterPosition = Vector2.zero;
 
     public Action<Character> createdCharacter = delegate { };
+    public Action setGame = delegate { };
 
     private void Awake()
     {
@@ -24,6 +25,7 @@ public class MapInitializer : MonoBehaviour
         yield return StartCoroutine(PlaceCells());
         yield return StartCoroutine(PlaceCharacters(_data.players));
         yield return StartCoroutine(PlaceCharacters(_data.enemies));
+        setGame?.Invoke();
     }
 
     private IEnumerator PlaceCells()
@@ -51,6 +53,7 @@ public class MapInitializer : MonoBehaviour
             yield return StartCoroutine(RandomPosition());
             var player =Instantiate(list[i], transform);
             player.transform.localPosition = new Vector3(_characterPosition.x, _characterPosition.y, 1);
+            player.SetFirstPosition(new Vector2(_characterPosition.x, _characterPosition.y));
             createdCharacter?.Invoke(player);
         }
     }

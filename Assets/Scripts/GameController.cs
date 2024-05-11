@@ -4,22 +4,23 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private MapInitializer _initializer;
+    [SerializeField] private TurnController _turnController;
     [SerializeField] private InputReader _inputReader;
 
     private bool _isMoving = false;
-    private List<Character> _playersList;
-    private List<Character> _enemies;
+
     private Character _actualCharacter;
 
     private void OnEnable()
     {
         _inputReader.moveEvent += HandleMovemente;
+        _turnController.characterTurn += HandleCurrentCharacter;
     }
 
     private void OnDisable()
     {
         _inputReader.moveEvent -= HandleMovemente;
+        _turnController.characterTurn -= HandleCurrentCharacter;
     }
 
     private void HandleMovemente(Vector2 dir)
@@ -28,13 +29,9 @@ public class GameController : MonoBehaviour
             StartCoroutine(TryToMove(dir));
     }
 
-    private void HandleCharacterList(List<Character> playersList)
+    private void HandleCurrentCharacter(Character currentPlayer)
     {
-        _playersList = playersList;
-        for (int i = 0; i < playersList.Count; i++)
-        {
-            Debug.Log(playersList[i].name);
-        }
+        _actualCharacter = currentPlayer;
     }
 
     private IEnumerator TryToMove(Vector2 dir)

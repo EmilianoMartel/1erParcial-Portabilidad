@@ -10,25 +10,39 @@ public class TurnController : MonoBehaviour
     private List<Character> _characters = new();
 
     private int _currentTurn = 0;
+
     public Action<Character> characterTurn = delegate { };
 
-    private void Start()
+    private void OnEnable()
     {
-        characterTurn?.Invoke(_characters[0]);
+        _initializer.createdCharacter += HandleCharacter;
+        _initializer.setGame += HandleStartGame;
     }
 
-    private void HandleEnemies(Character character)
+    private void OnDisable()
+    {
+        _initializer.createdCharacter -= HandleCharacter;
+        _initializer.setGame -= HandleStartGame;
+    }
+
+    private void HandleStartGame()
+    {
+        HandleNextTurn();
+    }
+
+    private void HandleCharacter(Character character)
     {
         _characters.Add(character);
     }
 
     [ContextMenu("EndTurn")]
-    private void HandleEndTurn()
+    private void HandleNextTurn()
     {
-        _currentTurn++;
-        if (_characters.Count >= _currentTurn)
-            _currentTurn = 0;
-
         characterTurn?.Invoke(_characters[_currentTurn]);
+        Debug.Log(_characters[_currentTurn].name);
+
+        _currentTurn++;
+        if (_characters.Count <= _currentTurn)
+            _currentTurn = 0;
     }
 }
