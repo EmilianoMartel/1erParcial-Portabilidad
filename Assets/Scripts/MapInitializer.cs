@@ -54,6 +54,7 @@ public class MapInitializer : MonoBehaviour
             var player =Instantiate(list[i], transform);
             player.transform.localPosition = new Vector3(_characterPosition.x, _characterPosition.y, 1);
             player.SetFirstPosition(new Vector2(_characterPosition.x, _characterPosition.y));
+            player.map = this;
             createdCharacter?.Invoke(player);
         }
     }
@@ -84,5 +85,12 @@ public class MapInitializer : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public void MoveCharacter(Vector2 actualPosition, Vector2 nextPosition, Character character)
+    {
+        _mapList[(int)actualPosition.x][(int)actualPosition.y] = false;
+        _mapList[(int)nextPosition.x][(int)nextPosition.y] |= true;
+        character.transform.localPosition = new Vector3(nextPosition.x, nextPosition.y, 1);
     }
 }

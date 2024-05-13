@@ -38,11 +38,12 @@ public class TurnController : MonoBehaviour
     [ContextMenu("EndTurn")]
     private void HandleNextTurn()
     {
-        characterTurn?.Invoke(_characters[_currentTurn]);
-        Debug.Log(_characters[_currentTurn].name);
-
+        _characters[_currentTurn].Restart();
         _currentTurn++;
         if (_characters.Count <= _currentTurn)
+        {
             _currentTurn = 0;
+        }
+        characterTurn?.Invoke(_characters[_currentTurn]);
     }
 }

@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _life: 10
+  _movement: 1
+  isActive: 0
+  isPlayed: 1
 --- !u!1 &1922524625495163289
 GameObject:
   m_ObjectHideFlags: 0
