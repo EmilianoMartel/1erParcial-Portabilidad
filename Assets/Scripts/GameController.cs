@@ -8,8 +8,6 @@ public class GameController : MonoBehaviour
     [SerializeField] private TurnController _turnController;
     [SerializeField] private InputReader _inputReader;
 
-    private bool _isMoving = false;
-
     private Character _actualCharacter;
     private Vector2 _nextPosiblePosition = Vector2.zero;
 

@@ -36,7 +36,7 @@ public class TurnController : MonoBehaviour
     }
 
     [ContextMenu("EndTurn")]
-    private void HandleNextTurn()
+    public void HandleNextTurn()
     {
         _characters[_currentTurn].Restart();
         _currentTurn++;

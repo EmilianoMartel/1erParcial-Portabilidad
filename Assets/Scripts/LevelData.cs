@@ -10,9 +10,11 @@ public class LevelData : ScriptableObject
     [SerializeField] private GameObject _cellGameObjectName;
     [SerializeField] private List<Character> _enemies;
     [SerializeField] private List<Character> _players;
+    [SerializeField] private List<CharacterData> _characters;
 
     public List<Character> enemies => _enemies;
     public List<Character> players => _players;
+    public List<CharacterData> characters => _characters;
     public int column { get { return _column; } }
     public int row { get { return _row; } }
     public string cellGameObjectName { get { return _cellGameObjectName.name; } }
