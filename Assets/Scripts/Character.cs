@@ -12,6 +12,8 @@ public class Character
     private int _currentLife = 0;
     private List<ActionRules> _actionRules = new();
 
+    public int currentLife => _currentLife;
+
     public Vector2 actualPosition => _actualPosition;
     public Action<ActionRules> actionEvent;
     public Action<int> onLifeChange;

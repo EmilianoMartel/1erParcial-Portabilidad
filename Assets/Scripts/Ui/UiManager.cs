@@ -6,6 +6,7 @@ public class UiManager : MonoBehaviour
 {
     [SerializeField] private Canvas _gameCanvas;
     [SerializeField] private Canvas _endCanvas;
+    [SerializeField] private Canvas _lifeCanvas;
     [SerializeField] private TMPro.TMP_Text _finalText;
 
     [SerializeField] private GameManager _gameManager;
@@ -29,6 +30,8 @@ public class UiManager : MonoBehaviour
     private void HandleEndGame(bool isWinning, Character  winCharacter)
     {
         _endCanvas.gameObject.SetActive(true);
+        _gameCanvas.gameObject.SetActive(false);
+        _lifeCanvas.gameObject.SetActive(false);
         if (!isWinning)
             _finalText.text = "Loose";
         else

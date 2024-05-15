@@ -44,7 +44,7 @@ public class ButtonsLogic : MonoBehaviour
     {
         var reference = Resources.Load<ActionButton>("Prefabs/" + _buttonPrefab.name);
         ActionButton newButton = Instantiate(reference, transform);
-        newButton.transform.parent = _buttonsContainer;
+        newButton.transform.SetParent(_buttonsContainer);
         newButton.CreateListener(character, data);
         return newButton;
     }
