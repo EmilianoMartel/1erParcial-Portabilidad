@@ -2,37 +2,68 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private TurnController _turnController;
     [SerializeField] private InputReader _inputReader;
+    [SerializeField] private MapManager _mapManager;
+    [SerializeField] private TurnController _controller;
 
-    private Character _actualCharacter;
-    private Vector2 _nextPosiblePosition = Vector2.zero;
+    private Character _character;
 
-    public Action<bool> isPlayeble = delegate { };
+    public Action<List<Character>, ActionData> meleeAttackEvent = delegate { };
+    public Action<List<Character>, ActionData> rangeAttackEvent = delegate { };
+    public Action<List<Character>, ActionData> healingEvent = delegate { };
+    public Action<Character> enemyTurnEvent;
+
     private void OnEnable()
     {
+        _controller.actualCharacter += HandleCharacter;
         _inputReader.moveEvent += HandleMovement;
-        _turnController.characterTurn += HandleCurrentCharacter;
     }
 
     private void OnDisable()
     {
+        _controller.actualCharacter -= HandleCharacter;
         _inputReader.moveEvent -= HandleMovement;
-        _turnController.characterTurn -= HandleCurrentCharacter;
     }
 
     private void HandleMovement(Vector2 dir)
     {
-        Debug.Log(dir);
-        _actualCharacter.Move(dir);
+        if (_character.CanMove() && _mapManager.CheckEmptyMapPosition(_character.actualPosition + dir))
+        {
+            _character.SetPosition(_mapManager.MoveCharacter(_character.actualPosition, _character.actualPosition + dir, _character));
+            _character.Action(_mapManager);
+        }
     }
 
-    private void HandleCurrentCharacter(Character currentPlayer)
+    private void HandleCharacter(Character character)
     {
-        _actualCharacter = currentPlayer;
-        isPlayeble?.Invoke(currentPlayer.isPlayed);
+        if (_character != null)
+            _character.actionEvent -= HandleActions;
+
+        _character = character;
+        if (_character._characterData.isPlayable)
+        {
+            _character.actionEvent += HandleActions;
+            _character.Action(_mapManager);
+        }
+        else
+        {
+            enemyTurnEvent?.Invoke(_character);
+        }
+       
+    }
+
+    private void HandleActions(ActionRules action)
+    {
+        if (action is MeeleAttack)
+            meleeAttackEvent?.Invoke(_controller.CheckPossibleActions(action.actionData.minDistance, action.actionData.maxDistance, _character), action.actionData);
+        if (action is RangeAttack)
+            rangeAttackEvent?.Invoke(_controller.CheckPossibleActions(action.actionData.minDistance, action.actionData.maxDistance, _character), action.actionData);
+        if (action is Health)
+            healingEvent?.Invoke(_controller.CheckPossibleActions(action.actionData.minDistance, action.actionData.maxDistance, _character), action.actionData);
+
     }
 }

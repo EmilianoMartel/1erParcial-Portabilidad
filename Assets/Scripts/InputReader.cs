@@ -6,25 +6,35 @@ using UnityEngine.InputSystem;
 
 public class InputReader : MonoBehaviour
 {
-    [SerializeField] private GameController _controller;
+    [SerializeField] private TurnController _controller;
     private bool _isPlayeble;
 
     public Action<Vector2> moveEvent = delegate { };
 
     private void OnEnable()
     {
-        _controller.isPlayeble += HandleIsPlayeable;
+        _controller.actualCharacter += HandleIsPlayeable;
     }
 
     private void OnDisable()
     {
-        _controller.isPlayeble -= HandleIsPlayeable;
+        _controller.actualCharacter -= HandleIsPlayeable;
+    }
+
+    private void Awake()
+    {
+        if (!_controller)
+        {
+            Debug.LogError($"{name}: Controller is null\nCheck and assigned one.\nDisabling component.");
+            enabled = false;
+            return;
+        }
     }
 
     public void HandleUpEvent(InputAction.CallbackContext inputContext)
     {
-        if(inputContext.started && _isPlayeble)
-            moveEvent?.Invoke(new Vector2(0,1));
+        if (inputContext.started && _isPlayeble)
+            moveEvent?.Invoke(new Vector2(0, 1));
     }
 
     public void HandleDownEvent(InputAction.CallbackContext inputContext)
@@ -45,8 +55,8 @@ public class InputReader : MonoBehaviour
             moveEvent?.Invoke(new Vector2(-1, 0));
     }
 
-    public void HandleIsPlayeable(bool isPlayable)
+    public void HandleIsPlayeable(Character character)
     {
-        _isPlayeble = isPlayable;
+        _isPlayeble = character._characterData.isPlayable;
     }
 }

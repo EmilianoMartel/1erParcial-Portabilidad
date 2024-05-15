@@ -1,60 +1,66 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class Character : MonoBehaviour, IHealthPoints
+public class Character
 {
-    [SerializeField] private CharacterData _characterData;
+    public CharacterData _characterData;
 
-    private MapInitializer _mapInitializer;
-    public MapInitializer map { set { _mapInitializer = value; } }
+    private Vector2 _actualPosition;
+    private int _currentMove = 0;
+    private int _currentLife = 0;
+    private List<ActionRules> _actionRules = new();
 
-    private int _currentLife;
+    public Vector2 actualPosition => _actualPosition;
+    public Action<ActionRules> actionEvent;
+    public Action<int> onLifeChange;
+    public Action<Character> onDead;
 
-    public bool isPlayed = false;
-
-    private List<Attack> _attacks;
-
-    private Vector2 _actualPosition = Vector2.zero;
-    private Vector2 _nextPosiblePosition = Vector2.zero;
-    private int _currentMovement = 0;
-
-    private void Awake()
+    public void CreateCharacter(CharacterData characterData)
     {
-        if (!_characterData)
-        {
-            Debug.LogError($"{name}: Character data is null.\nCheck and assigned one.\nDisabling component.");
-            enabled = false;
-            return;
-        }
-        _currentLife = _characterData.life;
+        _characterData = characterData;
+        _currentLife = characterData.life;
     }
 
-    public void SetFirstPosition(Vector2 position)
+    public void Action(MapManager manager)
     {
+        foreach (var rules in _actionRules)
+        {
+            actionEvent?.Invoke(rules);
+        }
+    }
+
+    public bool CanMove()
+    {
+        if (_currentMove < _characterData.movement)
+            return true;
+
+        return false;
+    }
+
+    public void ReciveLifeChanger(int change)
+    {
+        _currentLife += change;
+        onLifeChange?.Invoke(_currentLife);
+        Debug.Log($"{_characterData.nameCharacter}: {_currentLife}");
+        if (_currentLife <= 0)
+            onDead?.Invoke(this);
+    }
+
+    public void SetActionRules(ActionRules action)
+    {
+        _actionRules.Add(action);
+    }
+
+    public void SetPosition(Vector2 position)
+    {
+        _currentMove++;
         _actualPosition = position;
     }
-
-    public void Move(Vector2 dir)
+    
+    public void Reset()
     {
-        _nextPosiblePosition = _actualPosition + dir;
-        if (_mapInitializer.CheckEmptyMapPosition(_nextPosiblePosition) && _currentMovement < _characterData.movement)
-        {
-            _currentMovement++;
-            _mapInitializer.MoveCharacter(_actualPosition, _nextPosiblePosition, this);
-            _actualPosition = _nextPosiblePosition;
-        }
-    }
-
-    public void Restart()
-    {
-        _currentMovement = 0;
-    }
-
-    public void RaciveDamage(int damage)
-    {
-        _currentLife -= damage;
+        _currentMove = 0;
     }
 }
