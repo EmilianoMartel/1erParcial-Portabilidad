@@ -12,6 +12,9 @@ public class GameManager : MonoBehaviour
 
     public Action<bool,Character> winnerEvent = delegate { };
 
+    public event Action startAd;
+    public event Action endGame;
+
     private void OnEnable()
     {
         _mapManager.createdCharacter += AddCharacter;

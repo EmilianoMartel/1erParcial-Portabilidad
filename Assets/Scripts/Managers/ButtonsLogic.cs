@@ -14,6 +14,8 @@ public class ButtonsLogic : MonoBehaviour
 
     public Action<Character> doAction = delegate { };
 
+    public event Action actionPerformed;
+
     private void Awake()
     {
         Validate();

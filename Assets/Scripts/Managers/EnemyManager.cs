@@ -34,6 +34,7 @@ public class EnemyManager : MonoBehaviour
     {
         yield return StartCoroutine(EnemyMovement());
         yield return StartCoroutine(EnemyAttack());
+        _turnController.EndTurn();
     }
 
     private IEnumerator EnemyMovement()
@@ -70,6 +71,5 @@ public class EnemyManager : MonoBehaviour
                 yield break;
             }
         }
-        Debug.Log("llega");
     }
 }

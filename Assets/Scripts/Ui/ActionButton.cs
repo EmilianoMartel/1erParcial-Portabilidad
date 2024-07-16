@@ -1,7 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class ActionButton : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class ActionButton : MonoBehaviour
     [SerializeField] private Button _button;
 
     private bool _isPressed = false;
+
+    public event Action action;
 
     private void SetActionButton()
     {
@@ -38,5 +41,6 @@ public class ActionButton : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         _character.ReciveLifeChanger(_action.lifeModifier);
         _isPressed = false;
+        action?.Invoke();
     }
 }

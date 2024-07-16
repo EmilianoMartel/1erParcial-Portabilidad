@@ -25,7 +25,6 @@ public class TurnController : MonoBehaviour
         _mapManager.createdCharacter -= AddCharacter;
         for (int i = 0; i < _characters.Count; i++)
         {
-            _characters[i].onLifeChange -= HandleActionInCharacter;
             _characters[i].onDead -= HandleCharacterDead;
         }
     }
@@ -39,7 +38,6 @@ public class TurnController : MonoBehaviour
     private void AddCharacter(Character character)
     {
         _characters.Add(character);
-        character.onLifeChange += HandleActionInCharacter;
         character.onDead += HandleCharacterDead;
     }
 
@@ -65,10 +63,10 @@ public class TurnController : MonoBehaviour
         _characters[_currentTurn].Reset();
         actualCharacter?.Invoke(_characters[_currentTurn]);
     }
+
     private void HandleCharacterDead(Character character)
     {
         character.onDead -= HandleCharacterDead;
-        character.onLifeChange -= HandleActionInCharacter;
         if (_characters.Contains(character))
             _characters.Remove(character);
     }
