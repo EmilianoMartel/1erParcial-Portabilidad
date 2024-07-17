@@ -46,10 +46,12 @@ public class EnemyManager : MonoBehaviour
             int y = UnityEngine.Random.Range(0, 2);
             if (_mapManager.CheckEmptyMapPosition(_character.actualPosition + new Vector2(x, y)))
             {
+                Debug.Log($"Enemy move");
                 _character.SetPosition(_mapManager.MoveCharacter(_character.actualPosition, _character.actualPosition + new Vector2(x, y), _character));
             }
             else
             {
+                Debug.Log("Enemy try to move and fail");
                 count++;
             }
             yield return new WaitForSeconds(_waitForEnemy);
@@ -66,10 +68,13 @@ public class EnemyManager : MonoBehaviour
                                                                               _character);
             if(characters.Count > 0)
             {
+                Debug.Log("Enemy attack.");
                 int index = UnityEngine.Random.Range(0, characters.Count);
-                characters[i].ReciveLifeChanger(_character._characterData.effectData[i].lifeModifier);
+                characters[index].ReciveLifeChanger(_character._characterData.effectData[i].lifeModifier);
                 yield break;
             }
+
+            Debug.Log("Enemy try to attack and fail");
         }
     }
 }

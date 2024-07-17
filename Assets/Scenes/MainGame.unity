@@ -833,6 +833,7 @@ MonoBehaviour:
   _buttonPrefab: {fileID: 413440463967420549, guid: e1fb1512a85a4c140aac8385542f0c28, type: 3}
   _buttons:
   - {fileID: 787843016}
+  _controller: {fileID: 1059722776}
   _buttonsContainer: {fileID: 1249418552}
 --- !u!1 &444052107
 GameObject:
@@ -1395,7 +1396,7 @@ GameObject:
   - component: {fileID: 1059722777}
   - component: {fileID: 1059722776}
   m_Layer: 0
-  m_Name: TrunController
+  m_Name: TurnController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2233,6 +2234,7 @@ MonoBehaviour:
   _buttonPrefab: {fileID: 413440463967420549, guid: e1fb1512a85a4c140aac8385542f0c28, type: 3}
   _buttons:
   - {fileID: 377684429}
+  _controller: {fileID: 1059722776}
   _buttonsContainer: {fileID: 686301365}
 --- !u!1 &1551384281
 GameObject:
@@ -2671,6 +2673,7 @@ MonoBehaviour:
   _buttonPrefab: {fileID: 413440463967420549, guid: e1fb1512a85a4c140aac8385542f0c28, type: 3}
   _buttons:
   - {fileID: 684145992}
+  _controller: {fileID: 1059722776}
   _buttonsContainer: {fileID: 2085995314}
 --- !u!224 &2060214241
 RectTransform:
