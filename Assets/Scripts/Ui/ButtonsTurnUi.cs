@@ -13,6 +13,8 @@ public class ButtonsTurnUi : MonoBehaviour
     [SerializeField] private ButtonsLogic _range;
     [SerializeField] private ButtonsLogic _health;
 
+    private bool _canDoAction = true;
+
     private void OnEnable()
     {
         _turnController.actualCharacter += HandleCharacter;
@@ -20,10 +22,10 @@ public class ButtonsTurnUi : MonoBehaviour
         _gameConntroller.meleeAttackEvent += HandleMeleeAttack;
         _gameConntroller.rangeAttackEvent += HanldeRangeAttack;
         _gameConntroller.healingEvent += HandleHealth;
-        _gameConntroller.enemyTurnEvent += HandleEndTurn;
-        _melee.doAction += HandleEndTurn;
-        _range.doAction += HandleEndTurn;
-        _health.doAction += HandleEndTurn;
+        _gameConntroller.enemyTurnEvent += HandleEnemyTurn;
+        _melee.actionPerformedEvent += HandleActionPerformed;
+        _range.actionPerformedEvent += HandleActionPerformed;
+        _health.actionPerformedEvent += HandleActionPerformed;
     }
 
     private void OnDisable()
@@ -32,11 +34,11 @@ public class ButtonsTurnUi : MonoBehaviour
         _turnController.startEndTurn -= HandleEndTurn;
         _gameConntroller.meleeAttackEvent -= HandleMeleeAttack;
         _gameConntroller.rangeAttackEvent -= HanldeRangeAttack;
-        _gameConntroller.enemyTurnEvent -= HandleEndTurn;
+        _gameConntroller.enemyTurnEvent -= HandleEnemyTurn;
         _gameConntroller.healingEvent -= HandleHealth;
-        _melee.doAction -= HandleEndTurn;
-        _range.doAction -= HandleEndTurn;
-        _health.doAction -= HandleEndTurn;
+        _melee.actionPerformedEvent -= HandleActionPerformed;
+        _range.actionPerformedEvent -= HandleActionPerformed;
+        _health.actionPerformedEvent -= HandleActionPerformed;
     }
 
     private void Awake()
@@ -66,6 +68,9 @@ public class ButtonsTurnUi : MonoBehaviour
 
     private void SetButtonsLogic(ButtonsLogic logic, List<Character> list, ActionData data)
     {
+        if (!_canDoAction)
+            return;
+
         if (list.Count <= 0)
         {
             logic.gameObject.SetActive(false);
@@ -76,21 +81,22 @@ public class ButtonsTurnUi : MonoBehaviour
         logic.SetButtons(list, data);
     }
 
-    private void HandleEndTurn(Character enemy)
+    private void HandleEnemyTurn(Character character)
     {
-        DesactivateButtonLogic();
+        HandleActionPerformed();
+    }
+
+    private void HandleActionPerformed()
+    {
+        _health.gameObject.SetActive(false);
+        _melee.gameObject.SetActive(false);
+        _range.gameObject.SetActive(false);
+        _canDoAction = false;
     }
 
     private void HandleEndTurn()
     {
-        DesactivateButtonLogic();
-    }
-
-    private void DesactivateButtonLogic()
-    {
-        _melee.gameObject.SetActive(false);
-        _range.gameObject.SetActive(false);
-        _health.gameObject.SetActive(false);
+        _canDoAction = true;
     }
 
     private void Validate()

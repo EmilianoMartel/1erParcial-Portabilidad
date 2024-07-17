@@ -40,7 +40,7 @@ public class EnemyManager : MonoBehaviour
     private IEnumerator EnemyMovement()
     {
         int count = 0;
-        while (_character.CanMove() || count > 5)
+        while (_character.CanMove() && count > 5)
         {
             int x = UnityEngine.Random.Range(0, 2);
             int y = UnityEngine.Random.Range(0, 2);

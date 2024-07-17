@@ -10,23 +10,16 @@ public class ButtonsLogic : MonoBehaviour
 {
     [SerializeField] private ActionButton _buttonPrefab;
     [SerializeField] private List<ActionButton> _buttons;
-    [SerializeField] private TurnController _controller;
     [SerializeField] private Transform _buttonsContainer;
 
-    private bool _canDoAction = true;
-
-    public Action<Character> doAction = delegate { };
-
-    public event Action actionPerformed;
-
-    private void OnEnable()
-    {
-        _controller.startEndTurn += HandleEndTurn;
-    }
+    public Action actionPerformedEvent = delegate { };
 
     private void OnDisable()
     {
-        _controller.startEndTurn -= HandleEndTurn;
+        for (int i = 0; i < _buttons.Count; i++)
+        {
+            _buttons[i].action -= HandleActionPerformed;
+        }
     }
 
     private void Awake()
@@ -36,9 +29,6 @@ public class ButtonsLogic : MonoBehaviour
 
     public void SetButtons(List<Character> characters, ActionData data)
     {
-        if (!_canDoAction)
-            return;
-
         for (int i = 0; i < _buttons.Count; i++)
         {
             if (i < characters.Count)
@@ -56,6 +46,7 @@ public class ButtonsLogic : MonoBehaviour
         for (int i = _buttons.Count; i < characters.Count; i++)
         {
             var button = CreateNewButton(characters[i], data);
+            button.action += HandleActionPerformed;
             _buttons.Add(button);
         }
     }
@@ -71,16 +62,7 @@ public class ButtonsLogic : MonoBehaviour
 
     private void HandleActionPerformed()
     {
-        _canDoAction = false;
-        for (int i = 0; i < _buttons.Count; i++)
-        {
-            _buttons[i].gameObject.SetActive(false);
-        }
-    }
-
-    private void HandleEndTurn()
-    {
-        _canDoAction = true;
+        actionPerformedEvent?.Invoke();
     }
 
     private void Validate()

@@ -14,6 +14,11 @@ public class ActionButton : MonoBehaviour
 
     public event Action action;
 
+    private void OnDisable()
+    {
+        _button.onClick.RemoveAllListeners();
+    }
+
     private void SetActionButton()
     {
         _button.onClick.AddListener(OnClick);
