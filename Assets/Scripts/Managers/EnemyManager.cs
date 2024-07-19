@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private MapManager _mapManager;
     [SerializeField] private GameController _controller;
     [SerializeField] private TurnController _turnController;
+    [SerializeField] private EnemyTurnUi _enemyTurnUi;
 
     [SerializeField] private float _waitForEnemy = 0.5f;
 
@@ -32,6 +34,8 @@ public class EnemyManager : MonoBehaviour
 
     private IEnumerator EnemyTurn()
     {
+        _enemyTurnUi.HandleChangeText($"{_character.GetCharacterName()} turn");
+        yield return new WaitForSeconds(_waitForEnemy);
         yield return StartCoroutine(EnemyMovement());
         yield return StartCoroutine(EnemyAttack());
         _turnController.EndTurn();
@@ -40,18 +44,20 @@ public class EnemyManager : MonoBehaviour
     private IEnumerator EnemyMovement()
     {
         int count = 0;
-        while (_character.CanMove() && count > 5)
+        while (_character.CanMove() && count < 5)
         {
             int x = UnityEngine.Random.Range(0, 2);
             int y = UnityEngine.Random.Range(0, 2);
             if (_mapManager.CheckEmptyMapPosition(_character.actualPosition + new Vector2(x, y)))
             {
-                Debug.Log($"Enemy move");
+                _enemyTurnUi.HandleChangeText($"{_character.GetCharacterName()} move");
+                Debug.Log($"{_character.GetCharacterName()} move");
                 _character.SetPosition(_mapManager.MoveCharacter(_character.actualPosition, _character.actualPosition + new Vector2(x, y), _character));
             }
             else
             {
-                Debug.Log("Enemy try to move and fail");
+                _enemyTurnUi.HandleChangeText($"{_character.GetCharacterName()} try to move and fail!");
+                Debug.Log($"{_character.GetCharacterName()} try to move and fail!");
                 count++;
             }
             yield return new WaitForSeconds(_waitForEnemy);
@@ -68,13 +74,17 @@ public class EnemyManager : MonoBehaviour
                                                                               _character);
             if(characters.Count > 0)
             {
-                Debug.Log("Enemy attack.");
+                
                 int index = UnityEngine.Random.Range(0, characters.Count);
                 characters[index].ReciveLifeChanger(_character._characterData.effectData[i].lifeModifier);
+                _enemyTurnUi.HandleChangeText($"{_character.GetCharacterName()} attack to {characters[index].GetCharacterName()}");
+                Debug.Log($"{_character.GetCharacterName()} attack to {characters[index].GetCharacterName()}");
                 yield break;
             }
-
-            Debug.Log("Enemy try to attack and fail");
+            _enemyTurnUi.HandleChangeText($"{_character.GetCharacterName()} try to attack and fail");
+            Debug.Log($"{_character.GetCharacterName()} try to attack and fail");
         }
+
+        yield return new WaitForSeconds(_waitForEnemy);
     }
 }

@@ -61,6 +61,11 @@ public class Character
         _actualPosition = position;
     }
     
+    public string GetCharacterName()
+    {
+        return _characterData.nameCharacter;
+    }
+
     public void Reset()
     {
         _currentMove = 0;

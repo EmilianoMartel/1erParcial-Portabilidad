@@ -12,6 +12,7 @@ public class ButtonsTurnUi : MonoBehaviour
     [SerializeField] private ButtonsLogic _melee;
     [SerializeField] private ButtonsLogic _range;
     [SerializeField] private ButtonsLogic _health;
+    [SerializeField] private EnemyTurnUi _enemyTurn;
 
     private bool _canDoAction = true;
 
@@ -83,6 +84,7 @@ public class ButtonsTurnUi : MonoBehaviour
 
     private void HandleEnemyTurn(Character character)
     {
+        _enemyTurn.gameObject.SetActive(true);
         HandleActionPerformed();
     }
 
@@ -97,6 +99,7 @@ public class ButtonsTurnUi : MonoBehaviour
     private void HandleEndTurn()
     {
         _canDoAction = true;
+        _enemyTurn.gameObject.SetActive(false);
     }
 
     private void Validate()
@@ -128,6 +131,12 @@ public class ButtonsTurnUi : MonoBehaviour
         if (!_health)
         {
             Debug.LogError($"{name}: Health is null.\nCheck and assigned one.\nDisabling component.");
+            enabled = false;
+            return;
+        }
+        if (!_enemyTurn)
+        {
+            Debug.LogError($"{name}: Enemy turn is null.\nCheck and assigned one.\nDisabling component.");
             enabled = false;
             return;
         }
