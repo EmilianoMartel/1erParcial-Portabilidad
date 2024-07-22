@@ -6,12 +6,16 @@ using UnityEngine.TextCore.Text;
 
 public class GameManager : MonoBehaviour
 {
+
+    [SerializeField] private string playId = "Play";
+    [SerializeField] private string exitId = "Exit";
     [SerializeField] private MapManager _mapManager;
 
     private List<Character> _characters = new();
 
-    public Action<bool,Character> winnerEvent = delegate { };
+    public Action<bool, Character> winnerEvent = delegate { };
 
+    public event Action startGame;
     public event Action startAd;
     public event Action endGame;
 
@@ -34,6 +38,19 @@ public class GameManager : MonoBehaviour
         Validate();
     }
 
+    public void HandleSpecialEvents(string id)
+    {
+        if (id == playId)
+            startGame?.Invoke();
+        if (id == exitId)
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+            Application.Quit();
+        }
+    }
+
     private void AddCharacter(Character character)
     {
         _characters.Add(character);
@@ -53,8 +70,8 @@ public class GameManager : MonoBehaviour
     private void GameOverLogic()
     {
         if (CheckIfAreEnemies())
-            winnerEvent?.Invoke(false,new());
-        if(_characters.Count == 1)
+            winnerEvent?.Invoke(false, new());
+        if (_characters.Count == 1)
             winnerEvent?.Invoke(true, _characters[0]);
     }
 

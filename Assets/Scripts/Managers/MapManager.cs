@@ -6,6 +6,7 @@ using UnityEngine.TextCore.Text;
 
 public class MapManager : MonoBehaviour
 {
+    [SerializeField] private GameManager _gameManager;
     //DATA
     [SerializeField] private int _column = 3;
     [SerializeField] private int _row = 4;
@@ -19,7 +20,17 @@ public class MapManager : MonoBehaviour
     public Action<Character> createdCharacter = delegate { };
     public Action startGame = delegate { };
 
-    private void Awake()
+    private void OnEnable()
+    {
+        _gameManager.startGame += HandleStartGame;
+    }
+
+    private void OnDisable()
+    {
+        _gameManager.startGame -= HandleStartGame;
+    }
+
+    private void HandleStartGame()
     {
         StartCoroutine(StartMap());
     }
