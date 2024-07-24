@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00c1cbe57f7f47d4c862e9b103af673d, type: 3}
   m_Name: Exit
   m_EditorClassIdentifier: 
-  _menuId: Play
+  _menuId: Exit
