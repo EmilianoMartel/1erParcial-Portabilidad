@@ -9,7 +9,7 @@ public class MobilePlayerController : MonoBehaviour
     [SerializeField] private float speed = 1;
     [SerializeField] private MoveJoystick moveJoystick;
 
-    private void Start()
+    private void Awake()
     {
         Application.targetFrameRate = 60;
 

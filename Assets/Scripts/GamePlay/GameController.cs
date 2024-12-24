@@ -1,3 +1,4 @@
+using EventChannel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,7 @@ using UnityEngine.TextCore.Text;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private InputReader _inputReader;
+    [SerializeField] private Vector2Channel _moveChannel;
     [SerializeField] private MapManager _mapManager;
     [SerializeField] private TurnController _controller;
 
@@ -20,13 +21,13 @@ public class GameController : MonoBehaviour
     private void OnEnable()
     {
         _controller.actualCharacter += HandleCharacter;
-        _inputReader.moveEvent += HandleMovement;
+        _moveChannel.Sucription(HandleMovement);
     }
 
     private void OnDisable()
     {
         _controller.actualCharacter -= HandleCharacter;
-        _inputReader.moveEvent -= HandleMovement;
+        _moveChannel.Unsuscribe(HandleMovement);
     }
 
     private void HandleMovement(Vector2 dir)
