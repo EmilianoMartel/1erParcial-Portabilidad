@@ -17,6 +17,7 @@ public class GameController : MonoBehaviour
     public Action<List<Character>, ActionData> rangeAttackEvent = delegate { };
     public Action<List<Character>, ActionData> healingEvent = delegate { };
     public Action<Character> enemyTurnEvent;
+    public Action playerTurnEvent;
 
     private void OnEnable()
     {
@@ -49,6 +50,7 @@ public class GameController : MonoBehaviour
         {
             _character.actionEvent += HandleActions;
             _character.Action(_mapManager);
+            playerTurnEvent.Invoke();
         }
         else
         {

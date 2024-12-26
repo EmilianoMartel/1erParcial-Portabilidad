@@ -13,6 +13,7 @@ public class ButtonsTurnUi : MonoBehaviour
     [SerializeField] private ButtonsLogic _range;
     [SerializeField] private ButtonsLogic _health;
     [SerializeField] private EnemyTurnUi _enemyTurn;
+    [SerializeField] private Button _nextTurnButton;
 
     private bool _canDoAction = true;
 
@@ -27,6 +28,7 @@ public class ButtonsTurnUi : MonoBehaviour
         _melee.actionPerformedEvent += HandleActionPerformed;
         _range.actionPerformedEvent += HandleActionPerformed;
         _health.actionPerformedEvent += HandleActionPerformed;
+        _gameConntroller.playerTurnEvent += PlayerTurn;
     }
 
     private void OnDisable()
@@ -40,6 +42,7 @@ public class ButtonsTurnUi : MonoBehaviour
         _melee.actionPerformedEvent -= HandleActionPerformed;
         _range.actionPerformedEvent -= HandleActionPerformed;
         _health.actionPerformedEvent -= HandleActionPerformed;
+        _gameConntroller.playerTurnEvent -= PlayerTurn;
     }
 
     private void Awake()
@@ -85,6 +88,7 @@ public class ButtonsTurnUi : MonoBehaviour
     private void HandleEnemyTurn(Character character)
     {
         _enemyTurn.gameObject.SetActive(true);
+        _nextTurnButton.gameObject.SetActive(false);
         HandleActionPerformed();
     }
 
@@ -100,6 +104,11 @@ public class ButtonsTurnUi : MonoBehaviour
     {
         _canDoAction = true;
         _enemyTurn.gameObject.SetActive(false);
+    }
+
+    private void PlayerTurn()
+    {
+        _nextTurnButton.gameObject.SetActive(true);
     }
 
     private void Validate()
@@ -137,6 +146,12 @@ public class ButtonsTurnUi : MonoBehaviour
         if (!_enemyTurn)
         {
             Debug.LogError($"{name}: Enemy turn is null.\nCheck and assigned one.\nDisabling component.");
+            enabled = false;
+            return;
+        }
+        if (!_nextTurnButton)
+        {
+            Debug.LogError($"{name}: Next turn button is null.\nCheck and assigned one.\nDisabling component.");
             enabled = false;
             return;
         }

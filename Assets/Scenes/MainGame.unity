@@ -5863,6 +5863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _controller: {fileID: 1059722776}
+  _moveChannel: {fileID: 11400000, guid: 8eda6bb4987326445b557e17705f24ec, type: 2}
 --- !u!1 &1204825490
 GameObject:
   m_ObjectHideFlags: 0
@@ -7566,7 +7567,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f732d28be4a3ad842be6a365acfc0e59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _inputReader: {fileID: 1175207064}
+  _moveChannel: {fileID: 11400000, guid: 8eda6bb4987326445b557e17705f24ec, type: 2}
   _mapManager: {fileID: 1069364288}
   _controller: {fileID: 1059722776}
 --- !u!4 &1599059963
@@ -7641,6 +7642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   directionIcon: {fileID: 1681792009}
+  _moveChannel: {fileID: 11400000, guid: 8eda6bb4987326445b557e17705f24ec, type: 2}
 --- !u!114 &1624974256
 MonoBehaviour:
   m_ObjectHideFlags: 0
