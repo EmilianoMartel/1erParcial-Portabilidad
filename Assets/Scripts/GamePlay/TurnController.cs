@@ -88,4 +88,10 @@ public class TurnController : MonoBehaviour
         }
         return temp;
     }
+
+    private void HandleCharacterRevive(Character character)
+    {
+        character.onDead += HandleCharacterDead;
+        _characters.Add(character);
+    }
 }

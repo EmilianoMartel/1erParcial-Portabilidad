@@ -18,6 +18,7 @@ public class Character
     public Action<ActionRules> actionEvent;
     public Action<int> onLifeChange;
     public Action<Character> onDead;
+    public Action<Character> reset;
 
     public void CreateCharacter(CharacterData characterData)
     {
@@ -69,5 +70,16 @@ public class Character
     public void Reset()
     {
         _currentMove = 0;
+    }
+
+    public void Revive()
+    {
+        _currentLife = 5;
+    }
+
+    public void RestartGame()
+    {
+        _currentLife = _characterData.life;
+        reset.Invoke(this);
     }
 }

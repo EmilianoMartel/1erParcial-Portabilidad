@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 public class MapManager : MonoBehaviour
 {
@@ -20,6 +21,8 @@ public class MapManager : MonoBehaviour
     public Action<Character> createdCharacter = delegate { };
     public Action startGame = delegate { };
 
+    private bool _firstGame = true;
+
     private void OnEnable()
     {
         _gameManager.startGame += HandleStartGame;
@@ -32,7 +35,15 @@ public class MapManager : MonoBehaviour
 
     private void HandleStartGame()
     {
-        StartCoroutine(StartMap());
+        if (_firstGame)
+        {
+            StartCoroutine(StartMap());
+            _firstGame = false;
+        }
+        else
+        {
+            Restart();
+        }    
     }
 
     private IEnumerator StartMap()
@@ -141,6 +152,31 @@ public class MapManager : MonoBehaviour
             character.onDead -= HandleCharacterDead;
             _charactersView[character].SetActive(false);
             _mapList[(int)character.actualPosition.x][(int)character.actualPosition.y] = false;
+        }
+    }
+
+    private void Restart()
+    {
+        foreach (List<bool> listBool in _mapList)
+        {
+            for (int i = 0; i < listBool.Count; i++)
+            {
+                listBool[i] = false;
+            }
+        }
+
+        StartCoroutine(RestartPositions());
+    }
+
+    private IEnumerator RestartPositions()
+    {
+        foreach (Character character in _charactersView.Keys)
+        {
+            yield return StartCoroutine(RandomPosition());
+            character.RestartGame();
+            character.SetPosition(new Vector2(_characterPosition.x, _characterPosition.y));
+            _charactersView[character].gameObject.SetActive(true);
+            _charactersView[character].gameObject.transform.localPosition = new Vector3(_characterPosition.x, _characterPosition.y, -1);
         }
     }
 }

@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
     public event Action startAd;
     public event Action endGame;
 
+#if UNITY_ANDROID || UNITY_IOS
+    private bool _canRevive = true;
+    public Action<Character> reviveCharacter = delegate { };
+#endif
+
     private void OnEnable()
     {
         _mapManager.createdCharacter += AddCharacter;
@@ -41,7 +46,8 @@ public class GameManager : MonoBehaviour
     public void HandleSpecialEvents(string id)
     {
         if (id == playId)
-            startGame?.Invoke();
+            StartGame();
+
         if (id == exitId)
         {
 #if UNITY_EDITOR
@@ -49,6 +55,19 @@ public class GameManager : MonoBehaviour
 #endif
             Application.Quit();
         }
+    }
+
+    private void StartGame()
+    {
+        if (_characters.Count > 0)
+        {
+            for (int i = 0; i < _characters.Count; i++)
+            {
+                _characters[i].onDead -= HandleCharacterDead;
+            }
+        }
+        _characters.Clear();
+        startGame?.Invoke();
     }
 
     private void AddCharacter(Character character)
@@ -62,9 +81,23 @@ public class GameManager : MonoBehaviour
         character.onDead -= HandleCharacterDead;
         if (_characters.Contains(character))
             _characters.Remove(character);
+#if UNITY_ANDROID || UNITY_IOS
+        if (character._characterData.isPlayable && _canRevive)
+        {
+            _canRevive = false;
+            GameOverLogic(); //check
+            //reviveCharacter.Invoke(character);
+        }
+        else if (character._characterData.isPlayable)
+        {
+            GameOverLogic();
+            _canRevive = true;
+        }
 
+#else
         if (character._characterData.isPlayable)
             GameOverLogic();
+#endif
     }
 
     private void GameOverLogic()
