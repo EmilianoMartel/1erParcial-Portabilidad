@@ -13,11 +13,13 @@ public class UiManager : MonoBehaviour
     private void OnEnable()
     {
         _gameManager.winnerEvent += HandleEndGame;
+        _gameManager.startGame += HandleStartGame;
     }
 
     private void OnDisable()
     {
         _gameManager.winnerEvent -= HandleEndGame;
+        _gameManager.startGame -= HandleStartGame;
     }
 
     private void Awake()
@@ -34,6 +36,12 @@ public class UiManager : MonoBehaviour
             _finalText.text = "Loose";
         else
             _finalText.text = winCharacter._characterData.name + " Wins!";
+    }
+
+    private void HandleStartGame()
+    {
+        _endCanvas.gameObject.SetActive(false);
+        _gameCanvas.gameObject.SetActive(true);
     }
 
     private void Validate()

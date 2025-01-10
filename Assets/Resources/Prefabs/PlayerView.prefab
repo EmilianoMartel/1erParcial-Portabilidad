@@ -266,6 +266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _view: {fileID: 3005628743443543893}
   _lifeText: {fileID: 4864551705843210855}
+  _textTitle: {fileID: 8307492972259931810}
 --- !u!222 &4201288896449564732
 CanvasRenderer:
   m_ObjectHideFlags: 0

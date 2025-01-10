@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [ContextMenu("Start")]
     private void StartGame()
     {
         if (_characters.Count > 0)

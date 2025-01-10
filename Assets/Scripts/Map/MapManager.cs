@@ -174,6 +174,7 @@ public class MapManager : MonoBehaviour
         {
             yield return StartCoroutine(RandomPosition());
             character.RestartGame();
+            character.onDead += HandleCharacterDead;
             character.SetPosition(new Vector2(_characterPosition.x, _characterPosition.y));
             _charactersView[character].gameObject.SetActive(true);
             _charactersView[character].gameObject.transform.localPosition = new Vector3(_characterPosition.x, _characterPosition.y, -1);

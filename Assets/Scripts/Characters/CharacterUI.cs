@@ -8,6 +8,7 @@ public class CharacterUI : MonoBehaviour
 {
     [SerializeField] private Image _view;
     [SerializeField] private TMPro.TMP_Text _lifeText;
+    [SerializeField] private TMPro.TMP_Text _textTitle;
 
     private Character _character;
 
@@ -17,6 +18,7 @@ public class CharacterUI : MonoBehaviour
         {
             _character.onLifeChange -= HandleLifeChange;
             _character.onDead -= HandleOnDead;
+            _character.reset += HandleReset;
         }
     }
 
@@ -31,6 +33,7 @@ public class CharacterUI : MonoBehaviour
         _lifeText.text = character.currentLife.ToString();
         character.onLifeChange += HandleLifeChange;
         character.onDead += HandleOnDead;
+        character.reset += HandleReset;
     }
 
     private void HandleLifeChange(int life)
@@ -40,7 +43,16 @@ public class CharacterUI : MonoBehaviour
 
     private void HandleOnDead(Character character)
     {
-        gameObject.SetActive(false);
+        _view.gameObject.SetActive(false);
+        _lifeText.gameObject.SetActive(false);
+        _textTitle.gameObject.SetActive(false);
+    }
+
+    private void HandleReset(Character character)
+    {
+        _view.gameObject.SetActive(true);
+        _lifeText.gameObject.SetActive(true);
+        _textTitle.gameObject.SetActive(true);
     }
 
     private void Validate()
