@@ -7595,6 +7595,7 @@ MonoBehaviour:
   playId: Play
   exitId: Exit
   _mapManager: {fileID: 1069364288}
+  _adsManager: {fileID: 1926836188}
 --- !u!4 &1551384283
 Transform:
   m_ObjectHideFlags: 0

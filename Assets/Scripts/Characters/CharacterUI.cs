@@ -18,7 +18,8 @@ public class CharacterUI : MonoBehaviour
         {
             _character.onLifeChange -= HandleLifeChange;
             _character.onDead -= HandleOnDead;
-            _character.reset += HandleReset;
+            _character.reset -= HandleReset;
+            _character.revive -= HandleReset;
         }
     }
 
@@ -34,6 +35,8 @@ public class CharacterUI : MonoBehaviour
         character.onLifeChange += HandleLifeChange;
         character.onDead += HandleOnDead;
         character.reset += HandleReset;
+        character.revive += HandleReset;
+        _character = character;
     }
 
     private void HandleLifeChange(int life)

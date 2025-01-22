@@ -31,6 +31,12 @@ public class MapManager : MonoBehaviour
     private void OnDisable()
     {
         _gameManager.startGame -= HandleStartGame;
+
+        foreach (Character character in _charactersView.Keys)
+        {
+            character.onDead -= HandleCharacterDead;
+            character.revive -= HandleReviveCharacter;
+        }
     }
 
     private void HandleStartGame()
@@ -94,6 +100,7 @@ public class MapManager : MonoBehaviour
         _charactersView.Add(character,gObject);
         createdCharacter?.Invoke(character);
         character.onDead += HandleCharacterDead;
+        character.revive += HandleReviveCharacter;
     }
 
     private GameObject InstantiateGameObject(GameObject gObject)
@@ -152,6 +159,16 @@ public class MapManager : MonoBehaviour
             character.onDead -= HandleCharacterDead;
             _charactersView[character].SetActive(false);
             _mapList[(int)character.actualPosition.x][(int)character.actualPosition.y] = false;
+        }
+    }
+
+    private void HandleReviveCharacter(Character character)
+    {
+        if (_charactersView.ContainsKey(character))
+        {
+            character.onDead += HandleCharacterDead;
+            _charactersView[character].SetActive(true);
+            _mapList[(int)character.actualPosition.x][(int)character.actualPosition.y] = true;
         }
     }
 

@@ -14,11 +14,13 @@ public class UiManager : MonoBehaviour
     {
         _gameManager.winnerEvent += HandleEndGame;
         _gameManager.startGame += HandleStartGame;
+        _gameManager.reviveCharacter += ReviveCharacter;
     }
 
     private void OnDisable()
     {
         _gameManager.winnerEvent -= HandleEndGame;
+        _gameManager.reviveCharacter -= ReviveCharacter;
         _gameManager.startGame -= HandleStartGame;
     }
 
@@ -42,6 +44,11 @@ public class UiManager : MonoBehaviour
     {
         _endCanvas.gameObject.SetActive(false);
         _gameCanvas.gameObject.SetActive(true);
+    }
+
+    private void ReviveCharacter(Character character)
+    {
+        HandleStartGame();
     }
 
     private void Validate()

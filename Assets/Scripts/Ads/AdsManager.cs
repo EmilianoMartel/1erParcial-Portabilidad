@@ -1,3 +1,4 @@
+using EventChannel;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,6 +38,7 @@ public class AdsManager : MonoBehaviour, IUnityAdsInitializationListener
         _manager.startAd -= HandleEndGame;
         _manager.endGame -= HandleReactiveRewardButton;
         _rewardButton.onClick.RemoveListener(HandleStartReward);
+        _rewardedAd.adEnded -= HandleReward;
     }
 
     private void Awake()

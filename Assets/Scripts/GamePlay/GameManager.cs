@@ -10,8 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string playId = "Play";
     [SerializeField] private string exitId = "Exit";
     [SerializeField] private MapManager _mapManager;
+    [SerializeField] private AdsManager _adsManager;
 
     private List<Character> _characters = new();
+    private Character _lastCharacter;
 
     public Action<bool, Character> winnerEvent = delegate { };
 
@@ -27,6 +29,7 @@ public class GameManager : MonoBehaviour
     private void OnEnable()
     {
         _mapManager.createdCharacter += AddCharacter;
+        _adsManager.rewardEvent += HandleReviveCharacter;
     }
 
     private void OnDisable()
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
         {
             _characters[i].onDead -= HandleCharacterDead;
         }
+        _adsManager.rewardEvent -= HandleReviveCharacter;
     }
 
     private void Awake()
@@ -67,6 +71,7 @@ public class GameManager : MonoBehaviour
                 _characters[i].onDead -= HandleCharacterDead;
             }
         }
+        _canRevive = true;
         _characters.Clear();
         startGame?.Invoke();
     }
@@ -86,8 +91,8 @@ public class GameManager : MonoBehaviour
         if (character._characterData.isPlayable && _canRevive)
         {
             _canRevive = false;
-            GameOverLogic(); //check
-            //reviveCharacter.Invoke(character);
+            GameOverLogic();
+            _lastCharacter = character;
         }
         else if (character._characterData.isPlayable)
         {
@@ -99,6 +104,12 @@ public class GameManager : MonoBehaviour
         if (character._characterData.isPlayable)
             GameOverLogic();
 #endif
+    }
+
+    private void HandleReviveCharacter()
+    {
+        _lastCharacter.Revive();
+        reviveCharacter.Invoke(_lastCharacter);
     }
 
     private void GameOverLogic()
